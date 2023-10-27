@@ -4,17 +4,23 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon -e ts --exec \"npm run bot\"",
+    "bot": "npx tsc && node ./src/bot.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@grammyjs/i18n": "^1.0.1",
+    "@grammyjs/parse-mode": "^1.8.1",
+    "@grammyjs/types": "^3.3.0",
+    "canvas": "^2.11.2",
     "dotenv": "^16.3.1",
     "grammy": "^1.19.2"
   },
   "devDependencies": {
     "@types/node": "^20.8.8",
+    "nodemon": "^3.0.1",
     "typescript": "^5.2.2"
   }
 }

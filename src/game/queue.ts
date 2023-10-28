@@ -1,5 +1,5 @@
 export class Queue<T> {
-  private elements: Record<number, T>; // Объявляем объект для хранения элементов
+  private elements: Record<number, T>;
   private head: number;
   private tail: number;
 

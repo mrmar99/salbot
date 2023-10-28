@@ -7,30 +7,25 @@ import path from "path";
 export class Game {
   public queue: Queue<Player> = new Queue<Player>();
   private B!: Board;
-  private _boardUrl!: string;
   private PV!: PlayersVisualizer;
   private isGameStarted: boolean = false;
+  private boardUrl!: string;
+  
+  public boardPVBuffer!: Buffer;
 
-  setBoard(board: BoardType, boardUrl: string): void {
+  setBoard(board: BoardType, boardName: string): void {
     this.B = new Board(board);
-    this._boardUrl = boardUrl;
-  }
-
-  get boardUrl(): string {
-    return path.resolve(__dirname, this._boardUrl);
+    this.boardUrl = path.resolve(__dirname, boardName);
   }
 
   get isStarted(): boolean {
     return this.isGameStarted;
   }
 
-  start(players: Record<number, Player>): { firstPlayer: Player, boardUrlPV: string } | null {
+  async start(players: Record<number, Player>): Promise<Player | null> {
     const playersArr = Object.values(players);
     const playersCnt = playersArr.length;
     if (playersCnt < 1) return null;
-
-    this.PV = new PlayersVisualizer(players, this.boardUrl, this.B.options);
-    const boardUrlPV = this.PV.boardUrlPV();
 
     for (const player of playersArr) {
       player.status = 'playing';
@@ -42,9 +37,13 @@ export class Game {
       this.queue.enqueue(player);
     }
 
+    this.PV = new PlayersVisualizer(players, this.B.options);
+    await this.PV.setImage(this.boardUrl);
+    this.boardPVBuffer = this.PV.boardPVBuffer;
+
     this.isGameStarted = true;
     
-    return { firstPlayer: this.queue.peek(), boardUrlPV };
+    return this.queue.peek();
   }
 
   stop(): void {
@@ -83,6 +82,7 @@ export class Game {
     }
 
     this.PV.updateBoard(player);
+    this.boardPVBuffer = this.PV.boardPVBuffer;
 
     return player;
   }

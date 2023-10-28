@@ -9,6 +9,7 @@ export class Player {
   public prevPos: number;
   public movesSum: number;
   public color: string;
+  public visibleName: string;
 
   constructor(id: number) {
     this.id = id;
@@ -19,6 +20,7 @@ export class Player {
     this._lastMoves.enqueue(0, 0, 0);
     this.movesSum = 0;
     this.color = '';
+    this.visibleName = '';
   }
 
   updateMovesSum(diceVal: number): void {
